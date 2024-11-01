@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 from zipfile import ZipFile
-from helpers import get_words_form_file, check_spelling
+from helpers import get_words_form_file, check_spelling, save_words_to_file
 
 ZIP_FILENAME = "croco-blitz-source.zip"
 
@@ -19,9 +19,10 @@ def read_zipped_file():
     # 1634 words when set used
 
     checked_words_string: list[str] = check_spelling(words)
+    save_words_to_file(checked_words_string, 'words.txt')
 
-    for index, word in enumerate(checked_words_string):
-        print(f"[{index}] {word}")
+    # for index, word in enumerate(checked_words_string):
+    #     print(f"[{index}] {word}")
 
 
 if __name__ == "__main__":

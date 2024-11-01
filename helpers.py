@@ -22,6 +22,8 @@ def is_not_valid(text: str) -> bool:
 
 
 def get_words_form_file(file: IO[bytes] | TextIO) -> list[str]:
+    print(f"getting words from {file.name} file")
+
     prs = Presentation(file)
 
     result: list[str] = []
@@ -34,14 +36,28 @@ def get_words_form_file(file: IO[bytes] | TextIO) -> list[str]:
                 continue
             result.append(shape.text.strip())
 
+    print(f"getting words done. got {len(result)} words")
+
     return result
 
 
 def check_spelling(words: set[str]) -> list[str]:
+    print(f"checking {len(words)} words for spelling with Yandex Speller")
+
     speller = YandexSpeller()
     result = speller.spelled(' '.join(words))
 
+    print(f"spell checking done")
     return result.split(' ')
+
+
+def save_words_to_file(words: list[str], filename: str) -> None:
+    print(f"saving {len(words)} words to {filename} file")
+
+    with open(file=filename, mode='w', encoding='utf-8') as file:
+        file.writelines([word + "\n" for word in words])
+
+    print(f"saving words done")
 
 
 if __name__ == '__main__':
