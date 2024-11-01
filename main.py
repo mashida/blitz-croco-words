@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 from zipfile import ZipFile
-from helpers import get_words_form_file
+from helpers import get_words_form_file, check_spelling
 
 ZIP_FILENAME = "croco-blitz-source.zip"
 
@@ -9,13 +9,20 @@ ZIP_FILENAME = "croco-blitz-source.zip"
 def read_zipped_file():
     current_folder = os.path.dirname(os.path.realpath(__file__))
 
-    words = []
+    words: set[str] = set()
 
     with ZipFile(Path(current_folder) / 'src' / ZIP_FILENAME) as archive:
         for f in archive.namelist():
-            words.extend(get_words_form_file(archive.open(f)))
+            words.update(get_words_form_file(archive.open(f)))
 
-    for index, word in enumerate(words):
+    # 2247 words when lists used
+    # 1634 words when set used
+    # for index, word in enumerate(words):
+    #     print(f"[{index}] {word}")
+
+    checked_words_string = check_spelling(words)
+
+    for index, word in enumerate(checked_words_string.split(' ')):
         print(f"[{index}] {word}")
 
 

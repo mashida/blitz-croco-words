@@ -8,6 +8,8 @@
 import os
 from typing import IO, TextIO
 
+from pyaspeller import YandexSpeller
+
 FILE_NAME = "Osennyaya_igra_3.pptx"
 
 from pathlib import Path
@@ -27,6 +29,12 @@ def get_words_form_file(file: IO[bytes] | TextIO) -> list[str]:
             if ' ' in shape.text or '-' in shape.text or ':' in shape.text or 'СУПЕРКРОКО' in shape.text:
                 continue
             result.append(shape.text.strip())
+
+    return result
+
+def check_spelling(words: set[str]) -> str:
+    speller = YandexSpeller()
+    result = speller.spelled(' '.join(words))
 
     return result
 
