@@ -32,11 +32,11 @@ def get_words_form_file(file: IO[bytes] | TextIO) -> list[str]:
 
     return result
 
-def check_spelling(words: set[str]) -> str:
+def check_spelling(words: set[str]) -> list[str]:
     speller = YandexSpeller()
     result = speller.spelled(' '.join(words))
 
-    return result
+    return result.split(' ')
 
 
 if __name__ == '__main__':

@@ -17,12 +17,10 @@ def read_zipped_file():
 
     # 2247 words when lists used
     # 1634 words when set used
-    # for index, word in enumerate(words):
-    #     print(f"[{index}] {word}")
 
-    checked_words_string = check_spelling(words)
+    checked_words_string: list[str] = check_spelling(words)
 
-    for index, word in enumerate(checked_words_string.split(' ')):
+    for index, word in enumerate(checked_words_string):
         print(f"[{index}] {word}")
 
 
