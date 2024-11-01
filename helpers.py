@@ -17,6 +17,10 @@ from pathlib import Path
 from pptx import Presentation
 
 
+def is_not_valid(text: str) -> bool:
+    return ' ' in text or '-' in text or ':' in text or 'СУПЕРКРОКО' in text
+
+
 def get_words_form_file(file: IO[bytes] | TextIO) -> list[str]:
     prs = Presentation(file)
 
@@ -26,11 +30,12 @@ def get_words_form_file(file: IO[bytes] | TextIO) -> list[str]:
         for shape in slide.shapes:
             if not shape.has_text_frame:
                 continue
-            if ' ' in shape.text or '-' in shape.text or ':' in shape.text or 'СУПЕРКРОКО' in shape.text:
+            if is_not_valid(shape.text):
                 continue
             result.append(shape.text.strip())
 
     return result
+
 
 def check_spelling(words: set[str]) -> list[str]:
     speller = YandexSpeller()
