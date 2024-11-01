@@ -21,9 +21,6 @@ def read_zipped_file():
     checked_words_string: list[str] = check_spelling(words)
     save_words_to_file(checked_words_string, 'words.txt')
 
-    # for index, word in enumerate(checked_words_string):
-    #     print(f"[{index}] {word}")
-
 
 if __name__ == "__main__":
     read_zipped_file()
