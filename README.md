@@ -46,3 +46,13 @@ SQLite database path:
 - `POST /api/upload` (multipart form field `file`)
 - `GET /api/words?n=120`
 - `POST /api/users` JSON: `{"username": "...", "password": "..."}`
+
+### Docker
+Build and run locally:
+1. `docker build -t blitz-croco-words .`
+2. `docker run -p 8000:8000 -e APP_USER=admin -e APP_PASSWORD=admin blitz-croco-words`
+
+### GitLab CI/CD
+- Merge requests: `ruff`, `pylint`, and `pytest`
+- `main` branch: Docker build and deploy with shell executor
+- Configure runner variables: `APP_USER`, `APP_PASSWORD`, `APP_PORT`, `APP_DATA_DIR`
