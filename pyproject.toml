@@ -12,6 +12,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
   "pytest",
+  "pytest-cov>=7.0.0",
   "ruff",
   "pylint",
 ]
@@ -36,3 +37,4 @@ disable = [
 [build-system]
 requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
+
