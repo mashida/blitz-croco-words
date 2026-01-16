@@ -1,0 +1,14 @@
+[project]
+name = "blitz-croco-words"
+version = "0.1.0"
+description = "Extract words from pptx files in a zip archive."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "pyaspeller>=2.0.0",
+  "python-pptx>=1.0.2",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"

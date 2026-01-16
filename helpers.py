@@ -5,24 +5,22 @@
 
 Откройте файл презентации в программе с помощью объекта Presentation библиотеки pptx
 """
-import os
-from typing import IO, TextIO
+from pathlib import Path
+from typing import IO, Sequence
 
 from pyaspeller import YandexSpeller
+from pptx import Presentation
 
 FILE_NAME = "Osennyaya_igra_3.pptx"
-
-from pathlib import Path
-
-from pptx import Presentation
 
 
 def is_not_valid(text: str) -> bool:
     return ' ' in text or '-' in text or ':' in text or 'СУПЕРКРОКО' in text
 
 
-def get_words_form_file(file: IO[bytes] | TextIO) -> list[str]:
-    print(f"getting words from {file.name} file")
+def get_words_form_file(file: IO[bytes]) -> list[str]:
+    file_name = getattr(file, "name", "<stream>")
+    print(f"getting words from {file_name} file")
 
     prs = Presentation(file)
 
@@ -41,25 +39,30 @@ def get_words_form_file(file: IO[bytes] | TextIO) -> list[str]:
     return result
 
 
-def check_spelling(words: set[str]) -> list[str]:
+def check_spelling(words: Sequence[str]) -> list[str]:
+    if not words:
+        return []
+
     print(f"checking {len(words)} words for spelling with Yandex Speller")
 
     speller = YandexSpeller()
     result = speller.spelled(' '.join(words))
 
     print(f"spell checking done")
-    return result.split(' ')
+    return result.split()
 
 
-def save_words_to_file(words: list[str], filename: str) -> None:
-    print(f"saving {len(words)} words to {filename} file")
+def save_words_to_file(words: list[str], filename: str | Path) -> None:
+    path = Path(filename)
+    print(f"saving {len(words)} words to {path} file")
 
-    with open(file=filename, mode='w', encoding='utf-8') as file:
+    with path.open(mode='w', encoding='utf-8') as file:
         file.writelines([word + "\n" for word in words])
 
     print(f"saving words done")
 
 
 if __name__ == '__main__':
-    with open('Osennyaya_igra_3.pptx', 'r') as f:
+    sample_path = Path(__file__).resolve().parent / FILE_NAME
+    with sample_path.open('rb') as f:
         print(get_words_form_file(f))
