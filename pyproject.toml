@@ -7,10 +7,14 @@ requires-python = ">=3.10"
 dependencies = [
   "fastapi>=0.128.0",
   "pyaspeller>=2.0.0",
+  "python-dotenv>=1.0.1",
   "python-multipart>=0.0.21",
   "python-pptx>=1.0.2",
   "uvicorn>=0.40.0",
 ]
+
+[project.scripts]
+croco = "server:main"
 
 [project.optional-dependencies]
 dev = [
@@ -41,3 +45,5 @@ disable = [
 requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
+[tool.setuptools]
+py-modules = ["server", "helpers"]
