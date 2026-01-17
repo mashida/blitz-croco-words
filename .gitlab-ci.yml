@@ -1,0 +1,51 @@
+stages:
+  - lint
+  - test
+  - deploy
+
+.setup_uv: &setup_uv
+  - python3 -m pip install --user --upgrade pip
+  - python3 -m pip install --user uv
+  - export PATH="$HOME/.local/bin:$PATH"
+  - uv sync --extra dev
+
+lint:
+  stage: lint
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+  before_script: *setup_uv
+  script:
+    - uv run ruff check .
+    - uv run pylint main.py helpers.py check_spell.py current.py proper-current.py server.py
+
+test:
+  stage: test
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+  before_script: *setup_uv
+  script:
+    - uv run pytest
+
+deploy:
+  stage: deploy
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  script:
+    - export APP_PORT="${APP_PORT:-8000}"
+    - export APP_DATA_DIR="${APP_DATA_DIR:-/opt/blitz-croco-words}"
+    - export APP_USER="${APP_USER:-admin}"
+    - export APP_PASSWORD="${APP_PASSWORD:-admin}"
+    - export IMAGE_NAME="blitz-croco-words:${CI_COMMIT_SHORT_SHA}"
+    - mkdir -p "$APP_DATA_DIR"
+    - docker build -t "$IMAGE_NAME" .
+    - docker rm -f blitz-croco-words || true
+    - |
+      docker run -d \
+        --name blitz-croco-words \
+        --restart unless-stopped \
+        -p "${APP_PORT}:8000" \
+        -v "${APP_DATA_DIR}:/data" \
+        -e "APP_DB_PATH=/data/words.db" \
+        -e "APP_USER=${APP_USER}" \
+        -e "APP_PASSWORD=${APP_PASSWORD}" \
+        "$IMAGE_NAME"
