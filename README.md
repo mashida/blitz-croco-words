@@ -23,24 +23,44 @@ Notes:
 ## Web server
 The web server exposes a minimal UI and a JSON API with Basic Auth.
 
+### Environment
+Create `.env` in the repo root (or use `.env.example`) and fill in:
+- `APP_USER` (default: `admin`)
+- `APP_PASSWORD` (default: `admin`)
+- `APP_DB_PATH` (default: `data/words.db`)
+
 ### Run
 1. Install deps: `uv sync`
-2. Start server: `uv run uvicorn server:app --host 0.0.0.0 --port 8000`
+2. Start server: `uv run croco`
+3. Dev mode (auto-reload): `uv run croco --dev`
+4. Custom host/port: `uv run croco --host 0.0.0.0 --port 8000`
+
+`.env` is loaded automatically if present; environment variables from the
+runtime still take precedence.
 
 Open `http://localhost:8000` and sign in with Basic Auth.
 
 ### Authentication
-Set credentials via env vars:
+UI uses a login form on `/login` (cookie-based session).
+API requests still use Basic Auth.
+Set admin credentials via env vars:
 - `APP_USER` (default: `admin`)
 - `APP_PASSWORD` (default: `admin`)
+
+### Admin UI
+Use `/admin` to manage users (create, update passwords, roles, delete).
+Only the admin user can access it. The admin user is created from
+`APP_USER` / `APP_PASSWORD` on first start; changing `.env` later does not
+update the stored password in the database.
 
 ### Storage
 SQLite database path:
 - `APP_DB_PATH` (default: `data/words.db`)
 
 ### UI
-- Upload: `.pptx` or `.zip` containing `.pptx`
+- Upload: multiple `.pptx` or a `.zip` containing `.pptx`
 - Download: `words.txt` with `n` least-recently-used words for the user
+- Browse words: `/words` (paginated list with sorting)
 
 ### API
 - `POST /api/upload` (multipart form field `file`)
